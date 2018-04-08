@@ -1,11 +1,12 @@
+#!/usr/bin/env python
 import sys
 import re
 
 # Can't use octals for key values, so strings, init dicts
-parts = {'0001': 'Wireless Mouse', '0002': 'Wireless Keyboard', '0003': '19" Monitor', '0004': '23" Monitor', '0005'
+desc = {'0001': 'Wireless Mouse', '0002': 'Wireless Keyboard', '0003': '19" Monitor', '0004': '23" Monitor', '0005'
 : 'HDMI Cable', '0006': 'VGA Cable', '0007': 'USB Cable', '0008': 'Power Cable', '0009': '8GB Thumb Drive',
          '0010': '16GB Thumb Drive'}
-descr = {'0001': 3, '0002': 3, '0003': 2, '0004': 2, '0005': 5, '0006': 5, '0007': 10, '0008': 5, '0009': 3, '0010': 4}
+parts = {'0001': 3, '0002': 3, '0003': 2, '0004': 2, '0005': 5, '0006': 5, '0007': 10, '0008': 5, '0009': 3, '0010': 4}
 
 
 def main():
@@ -66,8 +67,11 @@ def defswitcher(selection, run):
 def printall():
     # passing global to defs to avoid creating a new box for Schrödinger each run though
     global parts, descr
-    for key, value in parts.items():
-        print("  " + key + " " + value)
+
+    print("  Part Number".ljust(20) + "# In Stock ".ljust(20) + "Part Description")
+    for key, value in desc.items():
+        print("  " + key.ljust(18) + str(parts.get(key)).ljust(20) + value)
+    print()
 
 
 def addpart():
