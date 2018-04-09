@@ -82,13 +82,12 @@ def addpart():
         addinput = input("\nEnter inventory and description comma delimited:   ")
 
         # Check validity of user selection, rerun if invalid
-        if re.fullmatch('([\d])+[,]([\w\s])+', addinput):
+        if re.fullmatch('([\d])+[,]\S+([\w\s])+', addinput):
             add = addinput.split(',')
             partnum = newpartnum()
             updatedictionaries(partnum, add)
         else:
             print("\nPlease follow proper formatting")
-    print(add)
 
 
 def newpartnum():
