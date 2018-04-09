@@ -119,7 +119,17 @@ def lookup():
             print("  " + partnum.ljust(18) + str(parts.get(partnum)).ljust(20) + desc.get(partnum) + "\n")
         else:
             print(partnum + " does not exist, try again")
+    changeinv()
 
+
+def changeinv():
+    change = input(
+        '''A:  Add to inventory
+S:  Subtract from inventory
+Q:  Return to main menu 
+Enter Choice from above menu:   '''
+    )
+    # will feed into updatedic()
 
 
 def lowinv():
