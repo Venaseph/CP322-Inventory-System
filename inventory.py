@@ -2,7 +2,7 @@
 import sys
 import re
 
-# Can't use octals for key values, so strings, init dicts
+# Init dictionaries
 desc = {'0001': 'Wireless Mouse', '0002': 'Wireless Keyboard', '0003': '19" Monitor', '0004': '23" Monitor', '0005'
         : 'HDMI Cable', '0006': 'VGA Cable', '0007': 'USB Cable', '0008': 'Power Cable', '0009': '8GB Thumb Drive',
          '0010': '16GB Thumb Drive'}
@@ -74,24 +74,38 @@ def printall():
 
 
 def addpart():
-    # passing global to defs to avoid creating a new box for Schrödinger each run though
-    global parts, descr
 
     # user input control-loop
     add = []
     while not add:
         # grab user input and split on comma
-        addinput = input("\nEnter description and initial stock count comma delimited:   ")
+        addinput = input("\nEnter inventory and description comma delimited:   ")
 
         # Check validity of user selection, rerun if invalid
-        if re.fullmatch('([\w])+[,]([\d])+', addinput):
+        if re.fullmatch('([\d])+[,]([\w\s])+', addinput):
             add = addinput.split(',')
-            # sort and grab highest key value
-            lastknown = sorted(desc.keys())[-1]
-            add.insert(0, lastknown)
+            partnum = newpartnum()
+            updatedictionaries(partnum, add)
         else:
             print("\nPlease follow proper formatting")
     print(add)
+
+
+def newpartnum():
+    # sort and grab highest key value, look for cleaner way to do this
+    lastknown = sorted(desc.keys())[-1]
+    partnum = int(lastknown)
+    partnum += 1
+
+    return str(partnum).zfill(4)
+
+
+def updatedictionaries(partnum, update):
+    # passing global to defs to avoid creating a new box for Schrödinger each run though
+    global parts, descr
+
+    parts.update({partnum: update[0]})
+    desc.update({partnum: update[1]})
 
 
 def lookup():
