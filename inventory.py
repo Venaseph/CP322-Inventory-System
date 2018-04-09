@@ -118,18 +118,21 @@ def newpartnum():
 
 
 def updatedictionaries(partnum, update):
+    global parts, desc
     # this could be cleaner for inv change/add new, but went this route due to time constraint
     if not update:
         #add to total inventory
         if partnum[0] == 'A':
             addcount = int(partnum[1])
             newtotal = parts.get(partnum[2])
+            newtotal = int(newtotal)
             newtotal += addcount
             parts.update({partnum[2]: newtotal})
         # subtract from inventory
         elif partnum[0] == 'S':
             addcount = int(partnum[1])
             newtotal = parts.get(partnum[2])
+            newtotal = int(newtotal)
             newtotal -= addcount
             parts.update({partnum[2]: newtotal})
     else:
@@ -138,12 +141,13 @@ def updatedictionaries(partnum, update):
 
 
 def lookup():
+    global parts, desc
     # user input control-loop
     partnum = None
     while not partnum:
         partnum = input("Enter part number:   ")
 
-        if re.fullmatch('\d{4}', partnum):
+        if re.fullmatch('\d{4}', partnum) and partnum in parts:
             print("  Part Number".ljust(20) + "# In Stock ".ljust(20) + "Part Description")
             print("  " + partnum.ljust(18) + str(parts.get(partnum)).ljust(20) + desc.get(partnum) + "\n")
         else:
@@ -189,10 +193,13 @@ def lowinv():
 
 
 def archive():
-    print("not implemented, please try again later")
-    # Had I had time, I intended to use a dic to store the product num as key and 'A' as value for all archived
-    # Then, I would have added a comparision operator in the print function to filter on output for both it and low inv
-    # Additionally, user input would have been handled the same way.
+    print(
+        '''Not implemented please try again later:
+ Had I had time, I intended to use a dic to store the product num as key 
+ and 'A' as value for all archived so as to avoid having to loop though a list to check if num exists.
+ Then, I would have added a comparision operator in the print function to filter on output for both it and low inv
+ Additionally, user input would have been handled the same way as the previous fields '''
+    )
 
 
 if __name__ == "__main__":
