@@ -3,11 +3,29 @@ import sys
 import re
 
 # Init dictionaries
-desc = {'0001': 'Wireless Mouse', '0002': 'Wireless Keyboard', '0003': '19" Monitor', '0004': '23" Monitor', '0005'
-        : 'HDMI Cable', '0006': 'VGA Cable', '0007': 'USB Cable', '0008': 'Power Cable', '0009': '8GB Thumb Drive',
-         '0010': '16GB Thumb Drive'}
-parts = {'0001': 3, '0002': 3, '0003': 2, '0004': 2, '0005': 5, '0006': 5, '0007': 10, '0008': 5, '0009': 3, '0010': 4}
+desc = {
+    '0001': 'Wireless Mouse',
+    '0002': 'Wireless Keyboard',
+    '0003': '19" Monitor',
+    '0004': '23" Monitor',
+    '0005': 'HDMI Cable',
+    '0006': 'VGA Cable',
+    '0007': 'USB Cable',
+    '0008': 'Power Cable',
+    '0009': '8GB Thumb Drive',
+    '0010': '16GB Thumb Drive'}
 
+parts = {
+    '0001': 3,
+    '0002': 3,
+    '0003': 2,
+    '0004': 2,
+    '0005': 5,
+    '0006': 5,
+    '0007': 10,
+    '0008': 5,
+    '0009': 3,
+    '0010': 4}
 
 def main():
     # do/while control
@@ -100,11 +118,23 @@ def newpartnum():
 
 
 def updatedictionaries(partnum, update):
-    # passing global to defs to avoid creating a new box for Schrödinger each run though
-    global parts, descr
-
-    parts.update({partnum: update[0]})
-    desc.update({partnum: update[1]})
+    # this could be cleaner for inv change/add new, but went this route due to time constraint
+    if not update:
+        #add to total inventory
+        if partnum[0] == 'A':
+            addcount = int(partnum[1])
+            newtotal = parts.get(partnum[2])
+            newtotal += addcount
+            parts.update({partnum[2]: newtotal})
+        # subtract from inventory
+        elif partnum[0] == 'S':
+            addcount = int(partnum[1])
+            newtotal = parts.get(partnum[2])
+            newtotal -= addcount
+            parts.update({partnum[2]: newtotal})
+    else:
+        parts.update({partnum: update[0]})
+        desc.update({partnum: update[1]})
 
 
 def lookup():
@@ -118,25 +148,51 @@ def lookup():
             print("  " + partnum.ljust(18) + str(parts.get(partnum)).ljust(20) + desc.get(partnum) + "\n")
         else:
             print(partnum + " does not exist, try again")
-    changeinv()
+            partnum = None
+    changeinv(partnum)
 
 
-def changeinv():
-    change = input(
-        '''A:  Add to inventory
+def changeinv(partnum):
+    getfuncval = []
+    while not getfuncval:
+        change = input(
+            '''A:  Add to inventory
 S:  Subtract from inventory
 Q:  Return to main menu 
 Enter Choice from above menu:   '''
     )
-    # will feed into updatedic()
-
+        if re.fullmatch('[A|S]', change):
+            value = None
+            while not value:
+                value = input("Please enter the value to amend inventory by:   ")
+                if re.fullmatch('[\d]+', value):
+                    getfuncval = []
+                    getfuncval.append(change)
+                    getfuncval.append(value)
+                    getfuncval.append(partnum)
+                else:
+                    print("\nPlease follow proper formatting")
+        elif re.fullmatch('[Q]', change):
+            getfuncval = change
+            print("\nPlease follow proper formatting")
+    update = []
+    updatedictionaries(getfuncval, update)
 
 def lowinv():
-    print("lowinv")
+    #wanted to merge this with one printall function but time constraint
+    print("  Part Number".ljust(20) + "# In Stock ".ljust(20) + "Part Description")
+    # iterate though and print
+    for key, value in desc.items():
+        if parts.get(key) < 3:
+            print("  " + key.ljust(18) + str(parts.get(key)).ljust(20) + value)
+    print()
 
 
 def archive():
-    print("archive")
+    print("not implemented, please try again later")
+    # Had I had time, I intended to use a dic to store the product num as key and 'A' as value for all archived
+    # Then, I would have added a comparision operator in the print function to filter on output for both it and low inv
+    # Additionally, user input would have been handled the same way.
 
 
 if __name__ == "__main__":
