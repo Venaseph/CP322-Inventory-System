@@ -109,7 +109,17 @@ def updatedictionaries(partnum, update):
 
 
 def lookup():
-    print("lookup")
+    # user input control-loop
+    partnum = None
+    while not partnum:
+        partnum = input("Enter part number:   ")
+
+        if re.fullmatch('\d{4}', partnum):
+            print("  Part Number".ljust(20) + "# In Stock ".ljust(20) + "Part Description")
+            print("  " + partnum.ljust(18) + str(parts.get(partnum)).ljust(20) + desc.get(partnum) + "\n")
+        else:
+            print(partnum + " does not exist, try again")
+
 
 
 def lowinv():
