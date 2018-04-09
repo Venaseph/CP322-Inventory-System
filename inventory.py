@@ -4,7 +4,7 @@ import re
 
 # Can't use octals for key values, so strings, init dicts
 desc = {'0001': 'Wireless Mouse', '0002': 'Wireless Keyboard', '0003': '19" Monitor', '0004': '23" Monitor', '0005'
-: 'HDMI Cable', '0006': 'VGA Cable', '0007': 'USB Cable', '0008': 'Power Cable', '0009': '8GB Thumb Drive',
+        : 'HDMI Cable', '0006': 'VGA Cable', '0007': 'USB Cable', '0008': 'Power Cable', '0009': '8GB Thumb Drive',
          '0010': '16GB Thumb Drive'}
 parts = {'0001': 3, '0002': 3, '0003': 2, '0004': 2, '0005': 5, '0006': 5, '0007': 10, '0008': 5, '0009': 3, '0010': 4}
 
@@ -24,6 +24,7 @@ def main():
 
 
 def menu():
+    # user input control-loop
     selection = None
     while selection is None:
         print(
@@ -65,17 +66,32 @@ def defswitcher(selection, run):
 
 
 def printall():
-    # passing global to defs to avoid creating a new box for Schrödinger each run though
-    global parts, descr
-
     print("  Part Number".ljust(20) + "# In Stock ".ljust(20) + "Part Description")
+    # iterate though and print
     for key, value in desc.items():
         print("  " + key.ljust(18) + str(parts.get(key)).ljust(20) + value)
     print()
 
 
 def addpart():
-    print("addpart")
+    # passing global to defs to avoid creating a new box for Schrödinger each run though
+    global parts, descr
+
+    # user input control-loop
+    add = []
+    while not add:
+        # grab user input and split on comma
+        addinput = input("\nEnter description and initial stock count comma delimited:   ")
+
+        # Check validity of user selection, rerun if invalid
+        if re.fullmatch('([\w])+[,]([\d])+', addinput):
+            add = addinput.split(',')
+            # sort and grab highest key value
+            lastknown = sorted(desc.keys())[-1]
+            add.insert(0, lastknown)
+        else:
+            print("\nPlease follow proper formatting")
+    print(add)
 
 
 def lookup():
